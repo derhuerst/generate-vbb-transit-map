@@ -1,0 +1,39 @@
+{
+	"name": "generate-vbb-transit-map",
+	"description": "Generate an SVG transit map for Berlin public transport.",
+	"version": "0.1.0",
+	"bin": {
+		"generate-vbb-transit-map": "./cli.js"
+	},
+	"main": "index.js",
+	"files": [
+		"cli.js",
+		"index.js"
+	],
+	"keywords": [
+		"vbb",
+		"public transport",
+		"graph",
+		"transit map",
+		"svg"
+	],
+	"author": "Jannis R <mail@jannisr.de>",
+	"homepage": "https://github.com/derhuerst/generate-vbb-transit-map",
+	"repository": "derhuerst/generate-vbb-transit-map",
+	"bugs": "https://github.com/derhuerst/generate-vbb-transit-map/issues",
+	"license": "ISC",
+	"engines": {
+		"node": ">=6"
+	},
+	"dependencies": {
+	},
+	"devDependencies": {
+		"tape": "^4.6.3",
+		"tap-min": "^1.2.1"
+	},
+	"scripts": {
+		"build": "./cli.js todo > map.svg",
+		"test": "node test.js | tap-min",
+		"prepublishOnly": "npm run build && npm test"
+	}
+}
