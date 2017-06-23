@@ -27,6 +27,7 @@
 	},
 	"dependencies": {
 		"minimist": "^1.2.0",
+		"random-color": "^1.0.1",
 		"virtual-dom-stringify": "^3.0.1",
 		"virtual-hyperscript-svg": "^2.0.0"
 	},

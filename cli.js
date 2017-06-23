@@ -31,7 +31,15 @@ const showError = (err) => {
 }
 
 const styles = h('style', {}, `
-	.todo {
+	.line {
+		stroke: #333;
+		stroke-width: 1;
+		fill: none;
+		stroke-linejoin: round;
+	}
+	.station {
+		stroke: none;
+		fill: #333;
 	}
 `)
 
@@ -47,9 +55,9 @@ process.stdin
 
 		const map = generate(graph)
 		const svg = h('svg', {
-		    width: '100',
-		    height: '100',
-		    viewBox: '0 0 100 100'
+		    width: '200',
+		    height: '200',
+		    viewBox: '0 0 200 200'
 		}, [styles, map])
 
 		process.stdout.write(toString(svg))
