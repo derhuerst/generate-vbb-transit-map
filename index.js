@@ -23,21 +23,40 @@ const f = (n) => Math.round(n * 1000) / 1000
 // }
 
 const generate = (data) => {
-	// todo: this structure is not valid JGF. change this!
-	// right now, this follows the output of dirkschumacher/TransitmapSolver.jl
-	const {stations, edges, lines, faces} = data
+	const {nodes, edges} = data
 	const items = []
 
-	const groupedEdges = groupBy(edges, (e) => e.line.id) // todo
+	// for (let edge of edges) {
+	// 	const from = nodes.find((node) => node.id === edge.from)
+	// 	const to = nodes.find((node) => node.id === edge.to)
+
+	// 	items.push(h('path', {
+	// 		class: 'line',
+	// 		style: {stroke: color().hexString()},
+	// 		d: [
+	// 			'M' + f(from.metadata.coordinates.x) + ' ' + (70 - f(from.metadata.coordinates.y)),
+	// 			'L' + f(to.metadata.coordinates.x) + ' ' + (70 - f(to.metadata.coordinates.y))
+	// 		].join(' ')
+	// 	}))
+	// }
+
+	const groupedEdges = groupBy(edges, (edge) => edge.metadata.line)
 	for (let line in groupedEdges) {
 		const edges = groupedEdges[line]
 		// todo: sort by closest neighbor
 
-		const points = [
-			[f(edges[0].from.coordinate.x), f(edges[0].from.coordinate.y)]
-		]
+		const firstFrom = nodes.find((node) => node.id === edges[0].from)
+		const firstTo = nodes.find((node) => node.id === edges[0].to)
+		const points = [[
+			f(firstFrom.metadata.coordinates.x),
+			f(firstTo.metadata.coordinates.y)
+		]]
 		for (let edge of edges) {
-			points.push([f(edge.to.coordinate.x), f(edge.to.coordinate.y)])
+			const to = nodes.find((node) => node.id === edge.to)
+			points.push([
+				f(to.metadata.coordinates.x),
+				f(to.metadata.coordinates.y)
+			])
 		}
 
 		// const d = noSmoothing(points)
@@ -50,13 +69,14 @@ const generate = (data) => {
 		}))
 	}
 
-	for (let station of stations) {
+	for (let station of nodes) {
 		items.push(h('circle', {
 			class: 'station',
+			'data-label': station.label,
 			style: {fill: color().hexString()},
-			cx: station.coordinate.x,
-			cy: station.coordinate.y,
-			r: 1
+			cx: f(station.metadata.coordinates.x),
+			cy: 70 - f(station.metadata.coordinates.y),
+			r: '.3'
 		}))
 	}
 
