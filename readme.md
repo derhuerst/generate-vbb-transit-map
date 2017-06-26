@@ -14,11 +14,66 @@
 npm install -g generate-vbb-transit-map
 ```
 
+or using [npx](https://github.com/zkat/npx#readme):
+
+```shell
+cat graph.json | npx generate-vbb-transit-map > map.svg
+```
+
 
 ## Usage
 
+From the command line:
+
 ```shell
-# todo
+Usage:
+    generate-vbb-transit-map
+Examples:
+    cat graph.json | generate-vbb-transit-map > map.svg
+```
+
+---
+
+As a library:
+
+```js
+const generateTransitMap = require('generate-vbb-transit-map')
+
+const graph = require('./graph.json') // some data
+const map = generate(graph)
+```
+
+`map` will be an array of [virtual-dom](https://github.com/Matt-Esch/virtual-dom#virtual-dom) SVG elements.
+
+Let's add styling and generate an SVG string:
+
+```
+const h = require('virtual-hyperscript-svg')
+const toString = require('virtual-dom-stringify')
+
+const css = `
+	.line {
+		stroke: #333;
+		stroke-width: 1;
+		fill: none;
+		stroke-linejoin: round;
+	}
+	.station {
+		stroke: none;
+		fill: #333;
+	}
+`
+
+const svg = h('svg', {
+    width: '500',
+    height: '500',
+    viewBox: '0 0 200 200'
+}, [
+	h('style', {}, css),
+	map
+])
+
+console.log(toString(svg))
 ```
 
 
