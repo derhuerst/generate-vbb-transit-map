@@ -27,7 +27,6 @@
 	},
 	"dependencies": {
 		"d3-shape": "^1.2.0",
-		"lodash.groupby": "^4.6.0",
 		"minimist": "^1.2.0",
 		"vbb-parse-line": "^0.2.4",
 		"vbb-util": "^0.10.1",
