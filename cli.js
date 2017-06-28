@@ -58,7 +58,7 @@ process.stdin
 		const svg = h('svg', {
 		    width: '800',
 		    height: '800',
-		    viewBox: '0 30 50 50'
+		    viewBox: '10 -5 50 50'
 		}, [styles, map])
 
 		process.stdout.write(toString(svg))

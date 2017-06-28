@@ -6,6 +6,7 @@ const parseLine = require('vbb-parse-line')
 const colors = require('vbb-util/lines/colors')
 
 // const smoothing = require('./lib/smoothing')
+const parallelise = require('./lib/parallelise')
 
 const f = (n) => Math.round(n * 1000) / 1000
 
@@ -23,62 +24,45 @@ const f = (n) => Math.round(n * 1000) / 1000
 // 	return commands.join('')
 // }
 
+const simplify = (nodes) => (edge) => {
+	let from = nodes.find((node) => node.id === edge.from)
+	if (!from) throw new Error(`node ${edge.from} of edge ${i} not found`)
+	from = from.metadata.coordinates
+
+	let to = nodes.find((node) => node.id === edge.to)
+	if (!to) throw new Error(`node ${edge.to} of edge ${i} not found`)
+	to = to.metadata.coordinates
+
+	return Object.assign({}, edge, {
+		line: edge.metadata.line,
+		start: [from.x, from.y],
+		end: [to.x, to.y]
+	})
+}
+
+const render = (edge) => {
+	const l = edge.line
+	const p = parseLine(l).type
+	const c = colors[p] && colors[p][l] && colors[p][l].bg || null
+
+	return h('path', {
+		class: 'line',
+		style: {stroke: c || '#777'},
+		d: 'M' + edge.start.map(f).join(' ') + 'L' + edge.end.map(f).join(' ')
+	})
+}
+
 const generate = (data) => {
 	const {nodes, edges} = data
-	const items = []
 
-	const renderedEdges = {}
-	const renderEdge = (from, to, edge) => {
-		const start = [from.x, 70 - from.y]
-		const end = [to.x, 70 - to.y]
-
-		// const signature = start.join(' ') + ' ' + end.join(' ')
-		const signature = [start, end]
-		.sort((a, b) => f(a[0] + a[1]) - f(b[0] + b[1]))
-		.map((n) => f(n[0]) + ' ' + f(n[1]))
-		.join(' ')
-
-		if (renderedEdges[signature]) {
-			const n = renderedEdges[signature] // nr of parallel edges
-			renderedEdges[signature]++
-
-			const offset = new V(end[0] - start[0], end[1] - start[1])
-			offset.rotate(Math.PI / 2).divide(offset.length()).multiply(n / 3)
-
-			start[0] += offset.x
-			start[1] += offset.y
-			end[0] += offset.x
-			end[1] += offset.y
-		}
-		else renderedEdges[signature] = 1
-
-		return 'M' + start.map(f).join(' ') + 'L' + end.map(f).join(' ')
-	}
-
-	for (let edge of edges) {
-		const l = edge.metadata.line
-		const p = parseLine(l).type
-		const c = colors[p] && colors[p][l] && colors[p][l].bg || null
-
-		const from = nodes.find((node) => node.id === edge.from)
-		if (!from) throw new Error(`node ${edge.from} not found`)
-
-		const to = nodes.find((node) => node.id === edge.to)
-		if (!to) throw new Error(`node ${edge.to} not found`)
-
-		items.push(h('path', {
-			class: 'line',
-			style: {stroke: c || '#777'},
-			d: renderEdge(from.metadata.coordinates, to.metadata.coordinates, edge)
-		}))
-	}
+	const items = parallelise(edges.map(simplify(nodes))).map(render)
 
 	for (let station of nodes) {
 		items.push(h('circle', {
 			class: 'station',
 			'data-label': station.label,
 			cx: f(station.metadata.coordinates.x),
-			cy: 70 - f(station.metadata.coordinates.y),
+			cy: f(station.metadata.coordinates.y),
 			r: '.18'
 		}))
 	}
