@@ -32,14 +32,18 @@ const generate = (data) => {
 		const start = [from.x, 70 - from.y]
 		const end = [to.x, 70 - to.y]
 
-		// todo: handle opposite-direction edges
-		const signature = start.join(' ') + ' ' + end.join(' ')
+		// const signature = start.join(' ') + ' ' + end.join(' ')
+		const signature = [start, end]
+		.sort((a, b) => f(a[0] + a[1]) - f(b[0] + b[1]))
+		.map((n) => f(n[0]) + ' ' + f(n[1]))
+		.join(' ')
+
 		if (renderedEdges[signature]) {
 			const n = renderedEdges[signature] // nr of parallel edges
 			renderedEdges[signature]++
 
 			const offset = new V(end[0] - start[0], end[1] - start[1])
-			offset.rotate(Math.PI / 2).divide(n * 1.5 * offset.length())
+			offset.rotate(Math.PI / 2).divide(offset.length()).multiply(n / 3)
 
 			start[0] += offset.x
 			start[1] += offset.y
@@ -75,7 +79,7 @@ const generate = (data) => {
 			'data-label': station.label,
 			cx: f(station.metadata.coordinates.x),
 			cy: 70 - f(station.metadata.coordinates.y),
-			r: '.25'
+			r: '.18'
 		}))
 	}
 
