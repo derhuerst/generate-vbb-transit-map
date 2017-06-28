@@ -1,5 +1,6 @@
 'use strict'
 
+const V = require('vec2')
 const h = require('virtual-hyperscript-svg')
 const parseLine = require('vbb-parse-line')
 const colors = require('vbb-util/lines/colors')
@@ -26,21 +27,45 @@ const generate = (data) => {
 	const {nodes, edges} = data
 	const items = []
 
+	const renderedEdges = {}
+	const renderEdge = (from, to, edge) => {
+		const start = [from.x, 70 - from.y]
+		const end = [to.x, 70 - to.y]
+
+		// todo: handle opposite-direction edges
+		const signature = start.join(' ') + ' ' + end.join(' ')
+		if (renderedEdges[signature]) {
+			const n = renderedEdges[signature] // nr of parallel edges
+			renderedEdges[signature]++
+
+			const offset = new V(end[0] - start[0], end[1] - start[1])
+			offset.rotate(Math.PI / 2).divide(n * 1.5 * offset.length())
+
+			start[0] += offset.x
+			start[1] += offset.y
+			end[0] += offset.x
+			end[1] += offset.y
+		}
+		else renderedEdges[signature] = 1
+
+		return 'M' + start.map(f).join(' ') + 'L' + end.map(f).join(' ')
+	}
+
 	for (let edge of edges) {
 		const l = edge.metadata.line
 		const p = parseLine(l).type
 		const c = colors[p] && colors[p][l] && colors[p][l].bg || null
 
 		const from = nodes.find((node) => node.id === edge.from)
+		if (!from) throw new Error(`node ${edge.from} not found`)
+
 		const to = nodes.find((node) => node.id === edge.to)
+		if (!to) throw new Error(`node ${edge.to} not found`)
 
 		items.push(h('path', {
 			class: 'line',
 			style: {stroke: c || '#777'},
-			d: [
-				'M' + f(from.metadata.coordinates.x) + ' ' + (70 - f(from.metadata.coordinates.y)),
-				'L' + f(to.metadata.coordinates.x) + ' ' + (70 - f(to.metadata.coordinates.y))
-			].join(' ')
+			d: renderEdge(from.metadata.coordinates, to.metadata.coordinates, edge)
 		}))
 	}
 
