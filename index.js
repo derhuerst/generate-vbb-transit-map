@@ -46,7 +46,7 @@ const render = (edge) => {
 	const c = colors[p] && colors[p][l] && colors[p][l].bg || null
 
 	return h('path', {
-		class: 'line',
+		class: 'line ' + l,
 		style: {stroke: c || '#777'},
 		d: 'M' + edge.start.map(f).join(' ') + 'L' + edge.end.map(f).join(' ')
 	})
@@ -63,7 +63,7 @@ const generate = (data) => {
 			'data-label': station.label,
 			cx: f(station.metadata.coordinates.x),
 			cy: f(station.metadata.coordinates.y),
-			r: '.18'
+			r: '.1'
 		}))
 	}
 
