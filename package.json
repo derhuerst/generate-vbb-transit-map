@@ -1,14 +1,15 @@
 {
 	"name": "generate-vbb-transit-map",
 	"description": "Generate an SVG transit map for Berlin public transport.",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"bin": {
 		"generate-vbb-transit-map": "./cli.js"
 	},
 	"main": "index.js",
 	"files": [
 		"cli.js",
-		"index.js"
+		"index.js",
+		"lib"
 	],
 	"keywords": [
 		"vbb",
