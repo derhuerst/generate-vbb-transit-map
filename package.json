@@ -40,8 +40,8 @@
 		"tap-min": "^1.2.1"
 	},
 	"scripts": {
-		"build": "./cli.js todo > map.svg",
+		"test-build": "cat test.json | ./cli.js >map.svg",
 		"test": "node test.js | tap-min",
-		"prepublishOnly": "npm run build && npm test"
+		"prepublishOnly": "npm run test-build && npm test"
 	}
 }
