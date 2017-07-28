@@ -56,10 +56,17 @@ process.stdin
 		const graph = JSON.parse(input)
 
 		const {items, bbox} = generate(graph)
+
+		// padding
+		const l = bbox.left - .5
+		const t = bbox.top - .5
+		const w = bbox.width + 1
+		const ht = bbox.height + 1
+
 		const svg = h('svg', {
-			width: bbox.width * 20,
-			height: bbox.height * 20,
-			viewBox: bbox.join(' ')
+			width: w * 20,
+			height: ht * 20,
+			viewBox: [l, t, w, ht].join(' ')
 		}, [
 			styles,
 			h('g', {transform: `translate(0,${bbox.height}) scale(1,-1)`}, items)

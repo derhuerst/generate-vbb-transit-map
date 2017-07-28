@@ -84,11 +84,10 @@ const generate = (data) => {
 		reportBbox(c.y - .1, c.x - .1, c.y + .1, c.x + .1)
 	}
 
-	// padding, round numbers
-	left = f(left - .5)
-	top = f(top - .5)
-	const width = f(right - left + 1)
-	const height = f(bottom - top + 1)
+	left = f(left)
+	top = f(top)
+	const width = f(right - left)
+	const height = f(bottom - top)
 	const bbox = Object.assign([left, top, width, height], {left, top, width, height})
 
 	return {items, bbox}
