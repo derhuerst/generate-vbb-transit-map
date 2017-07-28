@@ -33,12 +33,15 @@ const showError = (err) => {
 const styles = h('style', {}, `
 	.line {
 		stroke: #333;
-		stroke-width: .1;
+		stroke-width: .09;
 		fill: none;
 		stroke-linejoin: round;
 		stroke-linecap: round;
 	}
 	.station {
+		stroke: none;
+	}
+	.transit {
 		stroke: #555;
 		stroke-width: .05;
 		fill: #fff;

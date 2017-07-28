@@ -4,6 +4,7 @@ const V = require('vec2')
 const h = require('virtual-hyperscript-svg')
 const parseLine = require('vbb-parse-line')
 const colors = require('vbb-util/lines/colors')
+const uniqBy = require('lodash.uniqby')
 
 // const smoothing = require('./lib/smoothing')
 const parallelise = require('./lib/parallelise')
@@ -24,7 +25,7 @@ const f = (n) => Math.round(n * 1000) / 1000
 // 	return commands.join('')
 // }
 
-const simplify = (nodes) => (edge) => {
+const simplifyEdges = (nodes) => (edge) => {
 	let from = nodes.find((node) => node.id === edge.from)
 	if (!from) throw new Error(`node ${edge.from} of edge ${i} not found`)
 	from = from.metadata.coordinates
@@ -39,6 +40,11 @@ const simplify = (nodes) => (edge) => {
 		end: [to.x, to.y]
 	})
 }
+
+const findEdgesAt = (edges, node) => edges.filter((edge) => {
+	// todo: change to source & target, as in JGF spec
+	return edge.from === node.id || edge.to === node.id
+})
 
 const renderEdges = (reportBbox) => (edge) => {
 	const l = edge.line
@@ -58,6 +64,32 @@ const renderEdges = (reportBbox) => (edge) => {
 	})
 }
 
+const renderStations = (edges, reportBbox) => (station) => {
+	const edgesAt = findEdgesAt(edges, station)
+	if (edgesAt.length === 0) throw new Error('no edges connected to ' + station.id)
+	const isTransitNode = uniqBy(edgesAt, (e) => e.metadata.line).length > 1
+
+	let color = null
+	if (!isTransitNode) {
+		const l = edgesAt[0].metadata.line
+		const p = parseLine(l).type
+		color = colors[p] && colors[p][l] && colors[p][l].bg || null
+	}
+	const radius = isTransitNode ? .12 : .1 // todo
+
+	const c = station.metadata.coordinates
+	reportBbox(c.y - radius, c.x - radius, c.y + radius, c.x + radius)
+
+	return h('circle', {
+		class: isTransitNode ? 'station transit' : 'station',
+		'data-label': station.label,
+		cx: f(c.x),
+		cy: f(c.y),
+		r: radius + '',
+		fill: color || '#333'
+	})
+}
+
 const generate = (data) => {
 	const {nodes, edges} = data
 
@@ -69,20 +101,10 @@ const generate = (data) => {
 		if (r > right) right = r
 	}
 
-	const items = parallelise(edges.map(simplify(nodes)))
-	.map(renderEdges(reportBbox))
-
-	for (let station of nodes) {
-		const c = station.metadata.coordinates
-		items.push(h('circle', {
-			class: 'station',
-			'data-label': station.label,
-			cx: f(c.x),
-			cy: f(c.y),
-			r: '.1'
-		}))
-		reportBbox(c.y - .1, c.x - .1, c.y + .1, c.x + .1)
-	}
+	const items = [].concat(
+		parallelise(edges.map(simplifyEdges(nodes))).map(renderEdges(reportBbox)),
+		nodes.map(renderStations(edges, reportBbox))
+	)
 
 	left = f(left)
 	top = f(top)
