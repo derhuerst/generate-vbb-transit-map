@@ -40,10 +40,16 @@ const simplify = (nodes) => (edge) => {
 	})
 }
 
-const render = (edge) => {
+const renderEdges = (reportBbox) => (edge) => {
 	const l = edge.line
 	const p = parseLine(l).type
 	const c = colors[p] && colors[p][l] && colors[p][l].bg || null
+
+	const top = Math.min(edge.start[1], edge.end[1])
+	const left = Math.min(edge.start[0], edge.end[0])
+	const bottom = Math.max(edge.start[1], edge.end[1])
+	const right = Math.max(edge.start[0], edge.end[0])
+	reportBbox(top, left, bottom, right)
 
 	return h('path', {
 		class: 'line ' + l,
@@ -55,19 +61,37 @@ const render = (edge) => {
 const generate = (data) => {
 	const {nodes, edges} = data
 
-	const items = parallelise(edges.map(simplify(nodes))).map(render)
+	let top = Infinity, left = Infinity, bottom = -Infinity, right = -Infinity
+	const reportBbox = (t, l, b, r) => {
+		if (t < top) top = t
+		if (l < left) left = l
+		if (b > bottom) bottom = b
+		if (r > right) right = r
+	}
+
+	const items = parallelise(edges.map(simplify(nodes)))
+	.map(renderEdges(reportBbox))
 
 	for (let station of nodes) {
+		const c = station.metadata.coordinates
 		items.push(h('circle', {
 			class: 'station',
 			'data-label': station.label,
-			cx: f(station.metadata.coordinates.x),
-			cy: f(station.metadata.coordinates.y),
+			cx: f(c.x),
+			cy: f(c.y),
 			r: '.1'
 		}))
+		reportBbox(c.y - .1, c.x - .1, c.y + .1, c.x + .1)
 	}
 
-	return items
+	// padding, round numbers
+	left = f(left - .5)
+	top = f(top - .5)
+	const width = f(right - left + 1)
+	const height = f(bottom - top + 1)
+	const bbox = Object.assign([left, top, width, height], {left, top, width, height})
+
+	return {items, bbox}
 }
 
 module.exports = generate

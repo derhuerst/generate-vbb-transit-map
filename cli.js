@@ -55,12 +55,12 @@ process.stdin
 	try {
 		const graph = JSON.parse(input)
 
-		const map = generate(graph)
+		const {items, bbox} = generate(graph)
 		const svg = h('svg', {
-		    width: '800',
-		    height: '800',
-		    viewBox: '0 -5 50 50'
-		}, [styles, map])
+			width: bbox.width * 20,
+			height: bbox.height * 20,
+			viewBox: bbox.join(' ')
+		}, [styles, items])
 
 		process.stdout.write(toString(svg))
 	} catch (err) {

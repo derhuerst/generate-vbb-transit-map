@@ -43,7 +43,7 @@ const graph = require('./graph.json') // some data
 const map = generate(graph)
 ```
 
-`map` will be an array of [virtual-dom](https://github.com/Matt-Esch/virtual-dom#virtual-dom) SVG elements.
+`map.items` will be an array of [virtual-dom](https://github.com/Matt-Esch/virtual-dom#virtual-dom) SVG elements. `map.bbox` will be an array `[left, top, width, height]`.
 
 Let's add styling and generate an SVG string:
 
@@ -65,12 +65,12 @@ const css = `
 `
 
 const svg = h('svg', {
-    width: '500',
-    height: '500',
-    viewBox: '0 0 200 200'
+	width: bbox.width * 10,
+	height: bbox.height * 10,
+	viewBox: map.bbox.join(' ')
 }, [
 	h('style', {}, css),
-	map
+	map.items
 ])
 
 console.log(toString(svg))
