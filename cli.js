@@ -60,7 +60,10 @@ process.stdin
 			width: bbox.width * 20,
 			height: bbox.height * 20,
 			viewBox: bbox.join(' ')
-		}, [styles, items])
+		}, [
+			styles,
+			h('g', {transform: `translate(0,${bbox.height}) scale(1,-1)`}, items)
+		])
 
 		process.stdout.write(toString(svg))
 	} catch (err) {
