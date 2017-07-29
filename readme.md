@@ -40,38 +40,13 @@ As a library:
 const generateTransitMap = require('generate-vbb-transit-map')
 
 const graph = require('./graph.json') // some data
-const map = generate(graph)
+const map = generateTransitMap(graph)
 ```
 
-`map.items` will be an array of [virtual-dom](https://github.com/Matt-Esch/virtual-dom#virtual-dom) SVG elements. `map.bbox` will be an array `[left, top, width, height]`.
-
-Let's add styling and generate an SVG string:
+`map` will be a [virtual-dom](https://github.com/Matt-Esch/virtual-dom#virtual-dom) `<svg>` element. Generate an SVG string like this:
 
 ```
-const h = require('virtual-hyperscript-svg')
 const toString = require('virtual-dom-stringify')
-
-const css = `
-	.line {
-		stroke: #333;
-		stroke-width: 1;
-		fill: none;
-		stroke-linejoin: round;
-	}
-	.station {
-		stroke: none;
-		fill: #333;
-	}
-`
-
-const svg = h('svg', {
-	width: bbox.width * 10,
-	height: bbox.height * 10,
-	viewBox: map.bbox.join(' ')
-}, [
-	h('style', {}, css),
-	map.items
-])
 
 console.log(toString(svg))
 ```
