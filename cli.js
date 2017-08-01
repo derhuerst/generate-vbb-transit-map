@@ -1,13 +1,15 @@
 #!/usr/bin/env node
 'use strict'
 
-const minimist = require('minimist')
+const mri = require('mri')
 const toString = require('virtual-dom-stringify')
 
 const pkg = require('./package.json')
 const generate = require('.')
 
-const argv = minimist(process.argv.slice(2))
+const argv = mri(process.argv.slice(2), {
+	boolean: ['help', 'h', 'version', 'v']
+})
 
 if (argv.help || argv.h) {
 	process.stdout.write(`
