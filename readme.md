@@ -6,6 +6,7 @@
 [![build status](https://img.shields.io/travis/derhuerst/generate-vbb-transit-map.svg)](https://travis-ci.org/derhuerst/generate-vbb-transit-map)
 ![ISC-licensed](https://img.shields.io/github/license/derhuerst/generate-vbb-transit-map.svg)
 [![chat on gitter](https://badges.gitter.im/derhuerst.svg)](https://gitter.im/derhuerst)
+[![support me on Patreon](https://img.shields.io/badge/support%20me-on%20patreon-fa7664.svg)](https://patreon.com/derhuerst)
 
 
 ## Installing
@@ -14,7 +15,7 @@
 npm install -g generate-vbb-transit-map
 ```
 
-or using [npx](https://github.com/zkat/npx#readme):
+Or just run it using [npx](https://github.com/zkat/npx#readme):
 
 ```shell
 cat graph.json | npx generate-vbb-transit-map > map.svg
@@ -49,6 +50,36 @@ const map = generateTransitMap(graph)
 const toString = require('virtual-dom-stringify')
 
 console.log(toString(svg))
+```
+
+
+## Input data format
+
+The input data must be in the [JSON Graph Format](http://jsongraphformat.info). An example `graph.json` might look like this:
+
+```js
+{
+	"nodes": [ // list of all nodes
+		{
+			"id": "900000042101", // required
+			"metadata": {
+				"x": 537.029, // x-coordinate in any metric, required
+				"y": 673.576 // y-coordinate in any metric, required
+			}
+		}
+		// …
+	],
+	"edges": [ // list of all edges
+		{
+			"source": "900000120025", // node id, required
+			"target": "900000120008", // node id, required
+			"metadata": {
+				"line": "U5"
+			}
+		}
+		// …
+	]
+}
 ```
 
 
