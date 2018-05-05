@@ -30,7 +30,7 @@
 		"d3-shape": "^1.2.0",
 		"lodash.uniqby": "^4.7.0",
 		"mri": "^1.1.0",
-		"vbb-parse-line": "^0.2.4",
+		"vbb-parse-line": "^0.3.1",
 		"vbb-util": "^0.10.1",
 		"vec2": "^1.6.0",
 		"virtual-dom": "^2.1.1",
