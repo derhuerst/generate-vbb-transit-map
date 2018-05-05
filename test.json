@@ -4,89 +4,95 @@
 			"id": "A1",
 			"label": "A1",
 			"metadata": {
-				"coordinates": {"x": 1, "y": 1}
+				"x": 1,
+				"y": 1
 			}
 		},
 		{
 			"id": "A2",
 			"label": "A2",
 			"metadata": {
-				"coordinates": {"x": 1, "y": 2}
+				"x": 1,
+				"y": 2
 			}
 		},
 		{
 			"id": "B",
 			"label": "B",
 			"metadata": {
-				"coordinates": {"x": 2, "y": 1}
+				"x": 2,
+				"y": 1
 			}
 		},
 		{
 			"id": "C",
 			"label": "C",
 			"metadata": {
-				"coordinates": {"x": 3, "y": 1}
+				"x": 3,
+				"y": 1
 			}
 		},
 		{
 			"id": "D1",
 			"label": "D1",
 			"metadata": {
-				"coordinates": {"x": 4, "y": 1}
+				"x": 4,
+				"y": 1
 			}
 		},
 		{
 			"id": "D2",
 			"label": "D2",
 			"metadata": {
-				"coordinates": {"x": 4, "y": 2}
+				"x": 4,
+				"y": 2
 			}
 		}
 	],
 	"edges": [
 		{
-			"from": "A1",
-			"to": "B",
+			"source": "A1",
+			"target": "B",
 			"metadata": {"line": "U6"}
 		},
 		{
-			"from": "B",
-			"to": "C",
+			"source": "B",
+			"target": "C",
 			"metadata": {"line": "U6"}
 		},
 		{
-			"from": "C",
-			"to": "D2",
+			"source": "C",
+			"target": "D2",
 			"metadata": {"line": "U6"}
 		},
 		{
-			"from": "A2",
-			"to": "B",
+			"source": "A2",
+			"target": "B",
 			"metadata": {"line": "U7"}
 		},
 		{
-			"from": "B",
-			"to": "C",
+			"source": "B",
+			"target": "C",
 			"metadata": {"line": "U7"}
 		},
 		{
-			"from": "C",
-			"to": "D1",
+			"source": "C",
+			"target": "D1",
 			"metadata": {"line": "U7"}
 		},
 		{
-			"from": "A1",
-			"to": "B",
+			"source": "A1",
+			"target": "B",
 			"metadata": {"line": "U8"}
 		},
 		{
-			"from": "B",
-			"to": "C",
+			"source": "B",
+			"target": "C",
 			"metadata": {"line": "U8"}
 		},
 		{
-			"from": "C",
-			"to": "D1",
+			"source": "C",
+			"target": "D1",
 			"metadata": {"line": "U8"}
 		}
 	]
