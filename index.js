@@ -33,9 +33,11 @@ const generateWrapped = (data) => {
 
 	return h('svg', {
 		xmlns: 'http://www.w3.org/2000/svg',
-		width: w * 20,
-		height: ht * 20,
-		viewBox: [l, t, w, ht].join(' ')
+		width: (w * 20).toFixed(3),
+		height: (ht * 20).toFixed(3),
+		viewBox: [
+			l.toFixed(3), t.toFixed(3), w.toFixed(3), ht.toFixed(3)
+		].join(' ')
 	}, [
 		styles,
 		h('g', {transform: `translate(0,${bbox.height}) scale(1,-1)`}, items)
